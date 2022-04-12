@@ -4,9 +4,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.io.File;
 import java.io.FileNotFoundException;
-
-//se apenas a diagonal principal for = 0 grafo NAO planar
-//arrumar inicio loop (Começar de qualquer vertice)
+//Não funciona em grafos não orientados!!
 
 public class Grafo {
     private int n;
@@ -28,7 +26,6 @@ public class Grafo {
         ler_txt();
         coloreGrafo(this.matriz, 4);
         System.out.println();
-        // System.out.println(verificaPlanarVitao());
 
     }
 
@@ -41,7 +38,8 @@ public class Grafo {
 
     private void printaCores(int color[]) throws InterruptedException {
         System.out.println();
-        System.out.println("Colorindo o Grafo: ");
+        System.out.println("*** COLORINDO O GRAFO ***");
+        TimeUnit.MILLISECONDS.sleep(500);
         for (int i = 0; i < this.getN(); i++) {
             if (color[i] == 1) {
                 vertices.get(i).cor = "branco";
@@ -75,36 +73,16 @@ public class Grafo {
         return false;
     }
 
-    // public boolean verificaPlanarVitao() {
-    // int arestas = 0;
-    // for (int i = 0; i < this.getN(); i++) {
-    // for (int j = 0; j < this.getN(); j++) {
-    // if (matriz[i][j] == 1 && matriz[j][i] == 1) {
-    // arestas = arestas + 1;
-    // }
-    // }
-    // }
-    // System.out.println(arestas);
-    // if(arestas <= (3*this.getN())-6){
-    // return true;
-    // }
-    // else{
-    // System.out.println("nn eh planar");
-    // return false;
-    // }
-    // }
-
     private boolean coloreGrafo(int[][] matriz, int num_cor) throws InterruptedException {
         color = new int[this.getN()];
         Arrays.fill(color, 0);
 
-        if (!verificaPlanar(matriz, num_cor, color, abrirMenu() - 1)) {
+        if (!verificaPlanar(matriz, num_cor, color, 0)) {
             System.out.println(
-                    "Solução impossível, não se trata de um Grafo Planar!!");
+                    "Solução impossível!!");
             return false;
         }
   
-        verificaPlanar(matriz, num_cor, color, 0);
         printaCores(color);
         return true;
     }
@@ -124,18 +102,6 @@ public class Grafo {
         } catch (Exception error) {
             System.out.println("Erro: " + error);
         }
-    }
-
-    private int abrirMenu() {
-        Scanner leitor = new Scanner(System.in);
-        int opcao = 0;
-        while (opcao < vertices.get(0).indice || opcao > vertices.size()) {
-            System.out.print(
-                    "O Grafo possui [" + vertices.size() + "] vértices, escolha um para iniciar o algoritmo: ");
-            opcao = Integer.parseInt(leitor.nextLine());
-        }
-        leitor.close();
-        return opcao;
     }
 
     public int getN() {
